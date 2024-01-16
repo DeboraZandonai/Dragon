@@ -3,12 +3,11 @@ import { IoSearch } from "react-icons/io5";
 import * as S from "./styles";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  maxLength?: number;
   onSearch: (query: string) => void;
 };
 
 const Search = forwardRef<HTMLInputElement, InputProps>(
-  ({ maxLength, onSearch, ...props }, ref) => {
+  ({ onSearch, ...props }, ref) => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +20,6 @@ const Search = forwardRef<HTMLInputElement, InputProps>(
       <S.Content>
         <S.InputContainer>
           <S.Input
-            maxLength={maxLength}
             ref={ref}
             placeholder="Pesquisar"
             type="search"

@@ -4,13 +4,11 @@ import * as S from "./styles";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
-  maxLength?: number;
-  placeholder?: string;
   type?: string;
 };
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, maxLength, placeholder, type = "text", ...props }, ref) => {
+  ({ label, type = "text", ...props }, ref) => {
     const [inputType, setInputType] = useState(type === "password" ? "password" : "text");
 
     const togglePasswordVisibility = () => {
@@ -22,9 +20,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && <S.Label>{label}</S.Label>}
         <S.InputContainer>
           <S.Input
-            maxLength={maxLength}
             ref={ref}
-            placeholder={placeholder}
             type={inputType}
             {...props}
           />
