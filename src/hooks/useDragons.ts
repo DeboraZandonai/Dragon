@@ -1,5 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import api from '../services/api';
+import { queryClient } from '../services/queryClient';
 
 export interface Dragon {
   id: string;
@@ -11,64 +12,62 @@ export interface Dragon {
 
 // Buscar lista de dragões
 export const useDragons = () => {
-  return useQuery<Dragon[]>('dragons', async () => {
-    const { data } = await api.get('/dragon');
-    return data;
+  return useQuery<Dragon[]>({
+    queryKey: ['dragons'],
+    queryFn: async () => {
+      const { data } = await api.get('/dragon');
+      return data;
+    }
   });
 };
 
+
 // Buscar detalhes de um dragão específico
 export const useDragon = (id: string) => {
-  return useQuery<Dragon>(['dragon', id], async () => {
-    const { data } = await api.get(`/dragon/${id}`);
-    return data;
+  return useQuery<Dragon>({
+    queryKey: ['dragon', id],
+    queryFn: async () => {
+      const { data } = await api.get(`/dragon/${id}`);
+      return data;
+    }
   });
 };
 
 // Criar um dragão
 export const useCreateDragon = () => {
-  const queryClient = useQueryClient();
-  return useMutation(
-    async (dragon: Omit<Dragon, 'id'>) => {
+  return useMutation<Dragon, Error, Omit<Dragon, 'id'>>({
+    mutationFn: async (dragon) => {
       const { data } = await api.post('/dragon', dragon);
       return data;
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('dragons');
-      },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dragons'] });
     }
-  );
+  });
 };
 
 // Atualizar um dragão
 export const useUpdateDragon = () => {
-  const queryClient = useQueryClient();
-  return useMutation(
-    async (dragon: Dragon) => {
+  return useMutation<Dragon, Error, Dragon>({
+    mutationFn: async (dragon) => {
       const { data } = await api.put(`/dragon/${dragon.id}`, dragon);
       return data;
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('dragons');
-      },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dragons'] });
     }
-  );
+  });
 };
+
 
 // Deletar um dragão
 export const useDeleteDragon = () => {
-  const queryClient = useQueryClient();
-  return useMutation(
-    async (id: string) => {
+  return useMutation<void, Error, string>({
+    mutationFn: async (id) => {
       await api.delete(`/dragon/${id}`);
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('dragons');
-      },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dragons'] });
     }
-  );
+  });
 };
-

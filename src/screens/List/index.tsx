@@ -7,13 +7,13 @@ import Search from '../../components/search';
 
 export function List() {
 	const {
-		filteredDragons,
-		edit,
-		handleSearch,
+	filteredDragons,
+	edit,
+	handleSearch,
     handleDragonClick,
-		handleNavigationToRegister,
-		handleDeleteDragon,
-		handleEditDragon,
+	handleNavigationToRegister,
+	handleDeleteDragon,
+	handleEditDragon,
     handleUpdateDragon,
 	} = useList();
 
